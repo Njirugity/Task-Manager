@@ -26,6 +26,10 @@ class Db:
         self._session.commit()
         return newUser
     
+    def get_user_by_username(self, username):
+        the_user = self._session.query(User).filter_by(username=username).first()
+        return the_user
+
     def add_task(self, title, description, user_id):
         newTask = Tasks(title, description, user_id)
         self._session.add(newTask)
