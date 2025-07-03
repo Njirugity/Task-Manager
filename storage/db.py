@@ -35,3 +35,10 @@ class Db:
         self._session.add(newTask)
         self._session.commit()
         return newTask
+    def get_task(self, user_id):
+        tasks = self._session.query(Tasks).filter_by(user_id=user_id).all()
+        return [task.to_dict() for task in tasks]
+    
+    def get_single_task(self, task_id):
+        task = self._session.query(Tasks).filter_by(id=task_id).first()
+        return task.to_dict()
