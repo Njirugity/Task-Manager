@@ -39,6 +39,29 @@ class Db:
         tasks = self._session.query(Tasks).filter_by(user_id=user_id).all()
         return [task.to_dict() for task in tasks]
     
-    def get_single_task(self, task_id):
-        task = self._session.query(Tasks).filter_by(id=task_id).first()
+    def get_single_task(self, task_id, user_id):
+        task = self._session.query(Tasks).filter_by(id=task_id, user_id=user_id).first()
+        
         return task.to_dict()
+
+    
+    def update_task(self, task_id, user_id, data):
+        tasks = self._session.query(Tasks).filter_by(id =task_id,user_id=user_id).first()
+        
+        if tasks:
+            tasks.title = data.get("title", tasks.title)
+            tasks.description = data.get('description', tasks.description)
+            tasks.completed = data.get('completed', tasks.completed)
+            self._session.commit()
+            return tasks
+        return None
+    
+    def delete_task(self,task_id, user_id):
+        tasks = self._session.query(Tasks).filter_by(id =task_id,user_id=user_id).first()
+        
+        if tasks:
+            self._session.delete(tasks)
+            self._session.commit()
+            return True
+
+        return False
