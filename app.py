@@ -97,6 +97,44 @@ def get_task():
     task = db.get_task(user_id)
     return jsonify(task), 200
 
+@app.route("/tasks/<task_id>", methods=["GET"])
+@token_required
+def get_single_task(task_id):
+    user_id = g.user_id
+    try:
+        task = db.get_single_task(task_id, user_id)
+
+        if task:
+            return jsonify(task)
+        else:
+            return jsonify({"message": "Task not found or unauthorized"}), 404
+
+    except Exception as e:
+        app.logger.error(f"Error retrieving task {task_id} for user {user_id}: {str(e)}")
+        return jsonify({"message": f"An error occurred: {str(e)}"}), 500
+    
+@app.route("/tasks/<task_id>", methods=["PUT"])
+@token_required
+def update_tasks(task_id):
+    user_id = g.user_id
+    data = request.get_json()
+    if not data:
+        return jsonify({"message":"Body must contain data to update"}), 400
+    update_task = db.update_task(task_id, user_id, data)
+    if update_task:
+        return jsonify (update_task.to_dict()), 200
+    else:
+        return jsonify({"message":"Task not found"}), 404
+
+@app.route("/tasks/<task_id>", methods=["DELETE"])
+@token_required
+def delete_task(task_id):
+    user_id = g.user_id
+    deleted = db.delete_task(task_id, user_id)
+    if deleted:
+        return "", 204
+    else:
+        return jsonify({"message":"Task not found"}), 404
 
 if __name__ == "__main__":
     app.run(debug=True)
