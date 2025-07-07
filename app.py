@@ -4,11 +4,13 @@ from storage.db import Db
 import jwt
 from datetime import datetime, timedelta
 from functools import wraps
+from flask_cors import CORS
+
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 app.config['SECRET_KEY'] = 'secret_key'
 db = Db()
-
+CORS(app)
 @app.route('/')
 def index ():
     return 'Connected'
