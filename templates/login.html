@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="/templates/styles/authentication_forms.css">
+    
+</head>
+<body>
+    <div class="authenticationPages">
+        <h2>Login</h2>
+        
+        <form id="loginForm" class="space-y-4">
+            <div>
+                <label for="username" class="labelField">Username</label>
+                <input type="text" id="username" name="username" required
+                       class="inputField">
+            </div>
+            <div>
+                <label for="password" class="labelField">Password</label>
+                <input type="password" id="password" name="password" required
+                       class="inputField">
+            </div>
+            
+            <button type="submit"
+                    class="submitField">
+                Login
+            </button>
+        </form>
+
+        <div id="message" class="message"></div>
+        <div id="tokenDisplay" >
+            <span id="jwtToken"></span>
+        </div>
+    </div>
+
+    <script>
+        
+    </script>
+</body>
+</html>
