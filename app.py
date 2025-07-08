@@ -1,4 +1,4 @@
-from flask import Flask, request,jsonify, make_response, g
+from flask import Flask, request,jsonify, make_response, g, current_app, render_template, redirect, url_for 
 from flask_bcrypt import Bcrypt
 from storage.db import Db
 import jwt
@@ -11,9 +11,6 @@ bcrypt = Bcrypt(app)
 app.config['SECRET_KEY'] = 'secret_key'
 db = Db()
 CORS(app)
-@app.route('/')
-def index ():
-    return 'Connected'
 
 def token_required(func):
     @wraps(func)
@@ -21,20 +18,41 @@ def token_required(func):
         token = None
         if 'Authorization' in request.headers:
             token = request.headers['Authorization'].split(" ")[1]
-
+        
         if not token:
-            return jsonify({"message": "Authentication Token is missing!"}), 401
+            
+            return jsonify({'Alert!': "Token is missing"}),
         try:
             data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
             g.user_id = data['user_id'] 
         except jwt.ExpiredSignatureError:
-            return jsonify({"message": "Token has expired!"}), 401
+            if request.accept_mimetypes.accept_html and not request.is_json:
+                return redirect(url_for('login_page', expired=True)) # Redirect with a flag
+            return jsonify({"Alert": "Token has expired!"}),
         except jwt.InvalidTokenError:
-            return jsonify({"message": "Token is invalid!"}), 401
+            if request.accept_mimetypes.accept_html and not request.is_json:
+                return redirect(url_for('login_page', invalid=True))
+            return jsonify({"Alert": "Invalid token"}), 401
         except Exception as e:
-            return jsonify({"message": f"Token error: {str(e)}"}), 401
+            if request.accept_mimetypes.accept_html and not request.is_json:
+                return redirect(url_for('login_page', error=True))
+            return jsonify({"Alert": f"Token verification failed: {str(e)}"}), 401
         return func(*args, **kwargs)
     return decorated
+
+@app.route("/")
+@app.route("/home")
+
+def home_page():
+    return render_template("home.html")
+
+@app.route("/login_page")
+def login_page():
+    return render_template("login.html")
+
+@app.route("/signup_page")
+def signup_page():
+    return render_template("signup.html")
 
 # User routes
 @app.route('/register', methods=["POST"])
@@ -51,7 +69,7 @@ def register_user():
     
     try:
         new_user = db.add_user(username, email, hashed_password)
-        return jsonify({"message":"Registration successfull", "user_id":new_user.id})
+        return jsonify({"message":"Registration successfull"}), 201
     
     except Exception as e:
         import sqlalchemy.exc
