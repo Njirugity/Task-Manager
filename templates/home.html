@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My To-Do List</title>
+    <link rel="stylesheet" href="/static/home.css">
+</head>
+<body>
+    <div class="main-container">
+        <div class="header-section">
+            <h2 class="page-title">My Tasks</h2>
+            <button id="logoutButton" class="button button-red">
+                Logout
+            </button>
+        </div>
+        
+        <div id="message" class="message-box hidden"></div>
+
+        <!-- Add Task Button -->
+        <div class="add-task-button-container">
+            <button id="addTaskButton" class="button button-blue button-large">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon-plus" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                <span class="ml-2">Add New Task</span>
+            </button>
+        </div>
+
+        <!-- Add Task Form (Initially Hidden) -->
+        <div id="addTaskFormContainer" class="add-task-form-container">
+            <h3 class="form-title">New Task</h3>
+            <form id="newTaskForm" class="form-spacing-y">
+                <div>
+                    <label for="newTaskTitle" class="label-text">Title</label>
+                    <input type="text" id="newTaskTitle" name="title" required
+                           class="input-field">
+                </div>
+                <div>
+                    <label for="newTaskDescription" class="label-text">Description (Optional)</label>
+                    <textarea id="newTaskDescription" name="description" rows="3"
+                              class="input-field"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="cancelAddTask" class="button button-secondary">
+                        Cancel
+                    </button>
+                    <button type="submit"
+                            class="button button-green">
+                        Save Task
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Task List -->
+        <ul id="taskList" class="task-list-spacing">
+            <!-- Tasks will be dynamically loaded here -->
+            <li class="task-list-placeholder">No tasks yet. Add one!</li>
+        </ul>
+    </div>
+
+    <!-- Link to external JavaScript file -->
+    <script src="/static/home.js"></script>
+</body>
+</html>
