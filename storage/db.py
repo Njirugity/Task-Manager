@@ -21,20 +21,27 @@ class Db:
     
     def add_user(self, username, email, password_hash):
         newUser = User(username, email,password_hash)
-
-        self._session.add(newUser)
-        self._session.commit()
-        return newUser
-    
+        try:
+            self._session.add(newUser)
+            self._session.commit()
+            return newUser
+        except Exception as e:
+            self._session.rollback()
+            raise e
     def get_user_by_username(self, username):
         the_user = self._session.query(User).filter_by(username=username).first()
         return the_user
 
     def add_task(self, title, description, user_id):
-        newTask = Tasks(title, description, user_id)
-        self._session.add(newTask)
-        self._session.commit()
-        return newTask
+        try:
+            newTask = Tasks(title, description, user_id)
+        
+            self._session.add(newTask)
+            self._session.commit()
+            return newTask
+        except Exception as e:
+            self._session.rollback()
+            raise e
     def get_task(self, user_id):
         tasks = self._session.query(Tasks).filter_by(user_id=user_id).all()
         return [task.to_dict() for task in tasks]
@@ -46,22 +53,30 @@ class Db:
 
     
     def update_task(self, task_id, user_id, data):
-        tasks = self._session.query(Tasks).filter_by(id =task_id,user_id=user_id).first()
-        
-        if tasks:
-            tasks.title = data.get("title", tasks.title)
-            tasks.description = data.get('description', tasks.description)
-            tasks.completed = data.get('completed', tasks.completed)
-            self._session.commit()
-            return tasks
-        return None
+        try:
+            tasks = self._session.query(Tasks).filter_by(id =task_id,user_id=user_id).first()
+            
+            if tasks:
+                tasks.title = data.get("title", tasks.title)
+                tasks.description = data.get('description', tasks.description)
+                tasks.completed = data.get('completed', tasks.completed)
+                self._session.commit()
+                return tasks
+            return None
+        except Exception as e:
+            self._session.rollback()
+            raise e
     
     def delete_task(self,task_id, user_id):
-        tasks = self._session.query(Tasks).filter_by(id =task_id,user_id=user_id).first()
-        
-        if tasks:
-            self._session.delete(tasks)
-            self._session.commit()
-            return True
+        try:
+            tasks = self._session.query(Tasks).filter_by(id =task_id,user_id=user_id).first()
+            
+            if tasks:
+                self._session.delete(tasks)
+                self._session.commit()
+                return True
 
-        return False
+            return False
+        except Exception as e:
+            self._session.rollback()
+            raise e
