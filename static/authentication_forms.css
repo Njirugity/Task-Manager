@@ -80,3 +80,27 @@ h2{
     text-align: center;
     
 }
+.message-box {
+    padding: 0.75rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.message-box.hidden {
+    display: none;
+}
+
+.message-box-success {
+    background-color: #d1fae5; /* Light green */
+    color: #047857; /* Darker green text */
+}
+
+.message-box-error {
+    background-color: #fee2e2; /* Light red */
+    color: #b91c1c; /* Darker red text */
+}
+.token-display{
+    display: none;
+}

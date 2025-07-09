@@ -112,10 +112,16 @@ body {
     display: none;
 }
 
-.message-box.bg-green-100 { background-color: #d1fae5; }
-.message-box.text-green-700 { color: #047857; }
-.message-box.bg-red-100 { background-color: #fee2e2; }
-.message-box.text-red-700 { color: #b91c1c; }
+.message-box-success {
+    background-color: #d1fae5;
+    color: #047857;
+}
+
+.message-box-error {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
 
 .add-task-button-container {
     display: flex;
@@ -155,7 +161,7 @@ body {
 
 .input-field {
     display: block;
-    width: 100%;
+    width: 95%;
     padding: 0.5rem 0.75rem;
     border: 1px solid #d1d5db;
     border-radius: 0.375rem;
