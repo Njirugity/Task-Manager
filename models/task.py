@@ -1,8 +1,14 @@
+#!/usr/bin/python3
+"""Contains class Tasks"""
+
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
 from models.base_model import Base, BaseModel
 
+
 class Tasks(BaseModel, Base):
+    """Representation of a task"""
+
     __tablename__ = "tasks"
 
     title = Column(String(256), nullable=False)
@@ -12,10 +18,10 @@ class Tasks(BaseModel, Base):
 
     userRlt = relationship('User', back_populates="taskRlt")
 
-    def __init__(self,title, description,user_id, *args, **kwargs):
+    def __init__(self, title,  description, user_id, *args, **kwargs):
+        """Initialize a task"""
         super().__init__(*args, **kwargs)
         self.title = title
         self.description = description
-        
-        self.user_id = user_id
 
+        self.user_id = user_id

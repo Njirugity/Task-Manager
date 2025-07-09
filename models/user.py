@@ -1,9 +1,13 @@
+#!/usr/bin/python3
+"""Contains class User """
+
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 from models.base_model import Base, BaseModel
 
-class User(BaseModel,Base):
 
+class User(BaseModel, Base):
+    """Representation of a user """
     __tablename__ = "users"
 
     username = Column(String(128), unique=True, nullable=False)
@@ -12,8 +16,8 @@ class User(BaseModel,Base):
 
     taskRlt = relationship('Tasks', back_populates="userRlt")
 
-    def __init__(self, username, email, password_hash,*args, **kwargs):
-        
+    def __init__(self, username, email, password_hash, *args, **kwargs):
+        """Initialize a user"""
         super().__init__(*args, **kwargs)
         self.username = username
         self.email = email
