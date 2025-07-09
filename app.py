@@ -41,8 +41,9 @@ def token_required(func):
     return decorated
 
 @app.route("/")
+def landing_page():
+    return render_template("landing_page.html")
 @app.route("/home")
-
 def home_page():
     return render_template("home.html")
 
