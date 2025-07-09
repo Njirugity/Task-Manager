@@ -48,17 +48,22 @@ def token_required(func):
 
 @app.route("/")
 def landing_page():
+    """Serves the landing page"""
     return render_template("landing_page.html")
+
 @app.route("/home")
 def home_page():
+    """Serves the home page"""
     return render_template("home.html")
 
 @app.route("/login_page")
 def login_page():
+    """Serves the login page"""
     return render_template("login.html")
 
 @app.route("/signup_page")
 def signup_page():
+    """Serves the sign up page"""
     return render_template("signup.html")
 
 # User routes
