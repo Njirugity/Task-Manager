@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+"""Flask Application """
 from flask import Flask, request,jsonify, make_response, g, current_app, render_template, redirect, url_for 
 from flask_bcrypt import Bcrypt
 from storage.db import Db
@@ -6,13 +8,17 @@ from datetime import datetime, timedelta
 from functools import wraps
 from flask_cors import CORS
 
+
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 app.config['SECRET_KEY'] = 'secret_key'
 db = Db()
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "0.0.0.0"}})
 
 def token_required(func):
+    """
+    Ensures a valid JWT is present in the request's Authorization header before allowing access to the decorated Flask endpoint.
+    """
     @wraps(func)
     def decorated(*args, **kwargs):
         token = None
@@ -58,6 +64,7 @@ def signup_page():
 # User routes
 @app.route('/register', methods=["POST"])
 def register_user():
+    """Register a new user and hash their passord"""
     data = request.get_json()
     username = data.get('username')
     email = data.get('email')
@@ -80,6 +87,7 @@ def register_user():
     
 @app.route('/login', methods=["POST"])
 def login_user():
+    """Autheniticate and login a user"""
     data = request.get_json()
     username = data.get("username")
     password = data.get("password")
@@ -103,6 +111,7 @@ def login_user():
 @app.route('/tasks', methods=["POST"])
 @token_required
 def create_task():
+    """Create a new task for the authenticated user"""
     data = request.get_json()
     title = data.get('title')
     description = data.get("description")
@@ -114,6 +123,7 @@ def create_task():
 @app.route('/tasks', methods=['GET'])
 @token_required
 def get_task():
+    """Retrieve all tasks for the authenticated user"""
     user_id = g.user_id
     task = db.get_task(user_id)
     return jsonify(task), 200
@@ -121,6 +131,7 @@ def get_task():
 @app.route("/tasks/<task_id>", methods=["GET"])
 @token_required
 def get_single_task(task_id):
+    """Retreieve a single task for the authenticsted user"""
     user_id = g.user_id
     try:
         task = db.get_single_task(task_id, user_id)
@@ -137,6 +148,7 @@ def get_single_task(task_id):
 @app.route("/tasks/<task_id>", methods=["PUT"])
 @token_required
 def update_tasks(task_id):
+    """Update a task for the authenticated user"""
     user_id = g.user_id
     data = request.get_json()
     if not data:
@@ -150,6 +162,7 @@ def update_tasks(task_id):
 @app.route("/tasks/<task_id>", methods=["DELETE"])
 @token_required
 def delete_task(task_id):
+    """Delete a task for the authenticated user"""
     user_id = g.user_id
     deleted = db.delete_task(task_id, user_id)
     if deleted:
